@@ -152,7 +152,7 @@ class _Home extends State<Home> {
 
                   return Row(
                     children: List.generate(data.length, (index) {
-                      Map<String, dynamic> currentData = myProducts[index];
+                      Map<String, dynamic> currentData = data[index];
 
                       return Row(
                         children: [
@@ -195,7 +195,7 @@ class _Home extends State<Home> {
           "image": row["image"],
           "name": row["name"],
           "description": row["description"],
-          "type": row["type"]
+          "type": row["type"],
         });
       }
     });
