@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:plantshop/components/agreement.dart';
@@ -12,6 +13,7 @@ import 'package:plantshop/components/forms/form_text.dart';
 import 'package:plantshop/constants/custom_colors.dart';
 import 'package:plantshop/screens/dashboard.dart';
 import 'package:plantshop/screens/register.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
 
@@ -26,6 +28,8 @@ class _Login extends State<Login> {
 
   TextEditingController ctrlEmail = TextEditingController();
   TextEditingController ctrlPass = TextEditingController();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -111,13 +115,44 @@ class _Login extends State<Login> {
                   width: MediaQuery.of(context).size.width,
                   child: ButtonGreen(
                     text: "Sign In",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (ctx) => const Dashboard()
-                          )
-                      );
+                    onTap: () async {
+                      if(ctrlEmail.text.isNotEmpty && ctrlPass.text.isNotEmpty) {
+                        var body = json.encode({});
+
+                        await http.post(Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products"),
+                            headers: {"Content-Type": "application/json"},
+                            body: body,
+                            encoding: Encoding.getByName("utf-8")
+                        ).then((value) {
+                          dynamic apiResponse = json.decode(value.body.toString());
+                          bool status = apiResponse["status"];
+
+                          if(status) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) => const Dashboard()
+                                )
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Unable to login"
+                                  ),
+                                )
+                            );
+                          }
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  "Unable to login"
+                              ),
+                            )
+                        );
+                      }
                     },
                   ),
                 ),
