@@ -5,10 +5,12 @@ class CustomPageTitle extends StatelessWidget {
 
   const CustomPageTitle({
     super.key,
-    required this.title
+    required this.title,
+    this.text
   });
 
   final String title;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {

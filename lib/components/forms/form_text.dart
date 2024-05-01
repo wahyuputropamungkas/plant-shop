@@ -20,6 +20,17 @@ class FormText extends StatefulWidget {
 class _FormText extends State<FormText> {
 
   @override
+  void initState() {
+    super.initState();
+
+    // widget.controller.addListener(() {
+    //   if(widget.controller.text == "") {
+    //     alert("");
+    //   }
+    // });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,

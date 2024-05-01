@@ -3,7 +3,12 @@ import 'package:plantshop/constants/custom_colors.dart';
 
 class AppbarHome extends StatelessWidget {
 
-  const AppbarHome({super.key});
+  const AppbarHome({
+    super.key,
+    required this.name
+  });
+
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +20,10 @@ class AppbarHome extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Container(
               color: Colors.white,
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Good Morning",
                     style: TextStyle(
                         color: Colors.black,
@@ -27,8 +32,8 @@ class AppbarHome extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "John Doe",
-                    style: TextStyle(
+                    name,
+                    style: const TextStyle(
                         color: Colors.black,
                         fontSize: 24,
                         fontWeight: FontWeight.w600

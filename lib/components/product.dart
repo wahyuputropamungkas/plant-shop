@@ -3,7 +3,18 @@ import 'package:plantshop/constants/custom_colors.dart';
 
 class Product extends StatelessWidget {
 
-  const Product({super.key});
+  const Product({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.description,
+    required this.type
+  });
+
+  final String image;
+  final String title;
+  final String description;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +38,7 @@ class Product extends StatelessWidget {
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25)
               ),
-              child: Image.asset("assets/Images/plant1.png"),
+              child: Image.asset(image),
             ),
           ),
           Container(
@@ -37,7 +48,7 @@ class Product extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Fiddle leaf fig plant",
+                  title,
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
@@ -45,7 +56,7 @@ class Product extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Broadleaf evergreen",
+                  description,
                   style: TextStyle(
                       color: CustomColors().grey757575,
                       fontWeight: FontWeight.w400,
@@ -77,7 +88,7 @@ class Product extends StatelessWidget {
                                   horizontal: 8
                               ),
                               child: Text(
-                                "Indoor",
+                                type,
                                 style: TextStyle(
                                     color: CustomColors().green,
                                     fontSize: 14,

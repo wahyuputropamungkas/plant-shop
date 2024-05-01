@@ -54,6 +54,7 @@ class _Login extends State<Login> {
                 ),
                 const CustomPageTitle(
                   title: "Sign in to your account",
+                  text: "Check",
                 ),
                 const SizedBox(
                   height: 30,

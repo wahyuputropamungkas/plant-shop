@@ -40,7 +40,9 @@ class _Home extends State<Dashboard> {
           padding: const EdgeInsets.symmetric(
             horizontal: 24
           ),
-          child: const AppbarHome(),
+          child: const AppbarHome(
+            name: "John Doe",
+          ),
         ),
       ),
       body: Container(

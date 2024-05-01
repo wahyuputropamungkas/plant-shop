@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:plantshop/components/product.dart';
 import 'package:plantshop/constants/custom_colors.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
 
@@ -15,12 +18,14 @@ class _Home extends State<Home> {
 
   int selectedBottomMenu = 0;
   List<Map<String, dynamic>> listDataBottomMenu = [];
+  List<Map<String, String>> myProducts = [];
 
   @override
   void initState() {
     super.initState();
 
     listDataBottomMenu = dataBottomMenu();
+    myProducts = listProduct();
   }
 
   @override
@@ -139,22 +144,63 @@ class _Home extends State<Home> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(3, (index) {
-                return const Row(
-                  children: [
-                    Product(),
-                    SizedBox(
-                      width: 10,
-                    )
-                  ],
-                );
-              }),
+            child: FutureBuilder(
+              future: getProducts(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if(snapshot.connectionState == ConnectionState.done) {
+                  List<dynamic> data = snapshot.data;
+
+                  return Row(
+                    children: List.generate(data.length, (index) {
+                      Map<String, dynamic> currentData = myProducts[index];
+
+                      return Row(
+                        children: [
+                          Product(
+                            image: currentData["image"],
+                            title: currentData["name"],
+                            description: currentData["description"],
+                            type: currentData["type"],
+                          ),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ],
+                      );
+                    }),
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+
+                return Container();
+              },
             ),
           )
         ],
       ),
     );
+  }
+
+  Future getProducts() async {
+    List<dynamic> apiProducts = [];
+
+    await http.get(
+        Uri.parse(
+            "https://private-40208d-flutterworkshop.apiary-mock.com/products")).then((value) {
+      dynamic apiResponse = json.decode(value.body.toString());
+
+      for(var row in apiResponse) {
+        apiProducts.add({
+          "image": row["image"],
+          "name": row["name"],
+          "description": row["description"],
+          "type": row["type"]
+        });
+      }
+    });
+
+    return apiProducts;
   }
 
   List<Map<String, dynamic>> dataBottomMenu() {
@@ -184,6 +230,31 @@ class _Home extends State<Home> {
         "off": "assets/Icons/garden-off.png"
       },
     ];
+  }
+
+  List<Map<String, String>> listProduct() {
+    List<Map<String, String>> data = [
+      {
+        "image": "assets/Images/plant1.png",
+        "name": "Plant 1",
+        "description": "It's a plant",
+        "type": "outdoor"
+      },
+      {
+        "image": "assets/Images/plant2.png",
+        "name": "Plant 2",
+        "description": "It's also a plant",
+        "type": "indoor"
+      },
+      {
+        "image": "assets/Images/plant3.png",
+        "name": "Plant 1",
+        "description": "Yes, it's a plant",
+        "type": "outdoor"
+      }
+    ];
+
+    return data;
   }
 
 }
