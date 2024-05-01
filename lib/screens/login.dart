@@ -152,7 +152,7 @@ class _Login extends State<Login> {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                  "Unable to login"
+                                  "Field required"
                               ),
                             )
                         );

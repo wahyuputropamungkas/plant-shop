@@ -19,6 +19,7 @@ class _Home extends State<Home> {
   int selectedBottomMenu = 0;
   List<Map<String, dynamic>> listDataBottomMenu = [];
   List<Map<String, String>> myProducts = [];
+  List<dynamic> produk = [];
 
   @override
   void initState() {
@@ -26,6 +27,14 @@ class _Home extends State<Home> {
 
     listDataBottomMenu = dataBottomMenu();
     myProducts = listProduct();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await getProducts().then((value) {
+        setState(() {
+          produk = value;
+        });
+      });
+    });
   }
 
   @override
@@ -144,37 +153,24 @@ class _Home extends State<Home> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: FutureBuilder(
-              future: getProducts(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if(snapshot.connectionState == ConnectionState.done) {
-                  List<dynamic> data = snapshot.data;
+            child: produk.isEmpty ? const CircularProgressIndicator() : Row(
+              children: List.generate(produk.length, (index) {
+                Map<String, dynamic> currentData = produk[index];
 
-                  return Row(
-                    children: List.generate(data.length, (index) {
-                      Map<String, dynamic> currentData = data[index];
-
-                      return Row(
-                        children: [
-                          Product(
-                            image: currentData["image"],
-                            title: currentData["name"],
-                            description: currentData["description"],
-                            type: currentData["type"],
-                          ),
-                          SizedBox(
-                            width: 10,
-                          )
-                        ],
-                      );
-                    }),
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-
-                return Container();
-              },
+                return Row(
+                  children: [
+                    Product(
+                      image: currentData["image"],
+                      title: currentData["name"],
+                      description: currentData["description"],
+                      type: currentData["type"],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    )
+                  ],
+                );
+              }),
             ),
           )
         ],
