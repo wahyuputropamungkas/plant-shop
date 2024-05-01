@@ -153,24 +153,42 @@ class _Home extends State<Home> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: produk.isEmpty ? const CircularProgressIndicator() : Row(
-              children: List.generate(produk.length, (index) {
-                Map<String, dynamic> currentData = produk[index];
+            child: FutureBuilder(
+              future: getProducts(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if(snapshot.connectionState == ConnectionState.done) {
+                  if(snapshot.hasData) {
+                    return Row(
+                      children: List.generate(produk.length, (index) {
+                        Map<String, dynamic> currentData = produk[index];
 
-                return Row(
-                  children: [
-                    Product(
-                      image: currentData["image"],
-                      title: currentData["name"],
-                      description: currentData["description"],
-                      type: currentData["type"],
-                    ),
-                    SizedBox(
-                      width: 10,
-                    )
-                  ],
-                );
-              }),
+                        return Row(
+                          children: [
+                            Product(
+                              image: currentData["image"],
+                              title: currentData["name"],
+                              description: currentData["description"],
+                              type: currentData["type"],
+                            ),
+                            SizedBox(
+                              width: 10,
+                            )
+                          ],
+                        );
+                      }),
+                    );
+                  } else if(snapshot.hasError) {
+                    return Text(
+                      "Error"
+                    );
+                  } else {
+                    return Text(
+                        "Failed"
+                    );
+                  }
+                }
+                return Container();
+              },
             ),
           )
         ],
@@ -184,6 +202,13 @@ class _Home extends State<Home> {
     await http.get(
         Uri.parse(
             "https://private-40208d-flutterworkshop.apiary-mock.com/products")).then((value) {
+              if(value.statusCode == 200) {
+
+              } else if(value.statusCode == 201) {
+
+              } else {
+
+              }
       dynamic apiResponse = json.decode(value.body.toString());
 
       for(var row in apiResponse) {
