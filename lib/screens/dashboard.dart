@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:plantshop/components/appbars/appbar_home.dart';
 import 'package:plantshop/constants/custom_colors.dart';
+import 'package:plantshop/screens/cart.dart';
+import 'package:plantshop/screens/favorite.dart';
 import 'package:plantshop/screens/home.dart';
+import 'package:plantshop/screens/profile.dart';
 
 class Dashboard extends StatefulWidget {
 
@@ -16,7 +19,6 @@ class _Home extends State<Dashboard> {
 
   int selectedBottomMenu = 0;
   List<Map<String, dynamic>> listDataBottomMenu = [];
-  int numberColor = 100;
 
   @override
   void initState() {
@@ -49,58 +51,38 @@ class _Home extends State<Dashboard> {
           children: [
             Expanded(
               flex: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: CustomColors().greyC4C4C4,
-                                width: 1
-                            ),
-                            borderRadius: const BorderRadius.all(Radius.circular(100))
-                        ),
-                        padding: const EdgeInsets.only(
-                            right: 12,
-                            left: 24,
-                            top: 8,
-                            bottom: 8
-                        ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              isDense: true,
-                              label: const Text(
-                                "Searching a plant",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              hintText: "Find your favorite plant here",
-                              hintStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: CustomColors().grey757575,
-                                  fontWeight: FontWeight.w400
-                              ),
-                              border: InputBorder.none,
-                              suffixIcon: Container(
-                                decoration: BoxDecoration(
-                                    color: CustomColors().green,
-                                    shape: BoxShape.circle
-                                ),
-                                child: Image.asset("assets/Icons/search.png", scale: 2),
-                              )
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Visibility(
+                      visible: selectedBottomMenu == 0 ? true : false,
+                      maintainState: true,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      child: const Home(),
+                    ),
+                    Visibility(
+                      visible: selectedBottomMenu == 1 ? true : false,
+                      maintainState: true,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      child: const Favorite(),
+                    ),
+                    Visibility(
+                      visible: selectedBottomMenu == 2 ? true : false,
+                      maintainState: true,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      child: const Cart(),
+                    ),
+                    Visibility(
+                      visible: selectedBottomMenu == 3 ? true : false,
+                      maintainState: true,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      child: const Profile(),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -128,7 +110,12 @@ class _Home extends State<Dashboard> {
                       flex: 1,
                       child: Material(
                         child: Ink(
-                          color: Colors.white,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                  top: BorderSide(color: CustomColors().greyC4C4C4.withOpacity(0.2))
+                              )
+                          ),
                           child: InkWell(
                             onTap: () {
                               setState(() {
