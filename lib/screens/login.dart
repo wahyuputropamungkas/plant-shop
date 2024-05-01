@@ -117,9 +117,13 @@ class _Login extends State<Login> {
                     text: "Sign In",
                     onTap: () async {
                       if(ctrlEmail.text.isNotEmpty && ctrlPass.text.isNotEmpty) {
-                        var body = json.encode({});
+                        var body = json.encode({
+                          "email": ctrlEmail.text,
+                          "password": ctrlPass.text
+                        });
 
-                        await http.post(Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products"),
+                        await http.post(
+                            Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products"),
                             headers: {"Content-Type": "application/json"},
                             body: body,
                             encoding: Encoding.getByName("utf-8")
