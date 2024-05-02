@@ -19,7 +19,7 @@ class _SplashScreen extends State<SplashScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Login()
+            builder: (context) => const Login()
           )
         );
       });
@@ -29,18 +29,35 @@ class _SplashScreen extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Image.asset("assets/Images/splash.png", scale: 1, fit: BoxFit.fill),
-              Center(
-                child: Image.asset("assets/Logos/logo-white.png", scale: 4),
-              )
-            ],
-          ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Image.asset("assets/Images/splash.png", scale: 0.5, fit: BoxFit.fitHeight),
+            ),
+            Center(
+              child: Image.asset("assets/Logos/logo-white.png", scale: 3),
+            ),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(16),
+                child: const Center(
+                  child: Text(
+                    "\u00a92024 Oemah Solution Indonesia",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

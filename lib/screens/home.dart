@@ -200,15 +200,8 @@ class _Home extends State<Home> {
     List<dynamic> apiProducts = [];
 
     await http.get(
-        Uri.parse(
-            "https://private-40208d-flutterworkshop.apiary-mock.com/products")).then((value) {
-              if(value.statusCode == 200) {
-
-              } else if(value.statusCode == 201) {
-
-              } else {
-
-              }
+        Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products")
+    ).then((value) {
       dynamic apiResponse = json.decode(value.body.toString());
 
       for(var row in apiResponse) {
