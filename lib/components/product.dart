@@ -30,15 +30,17 @@ class Product extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             width: 200,
+            height: 200,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25)
               ),
-              child: Image.asset(image),
+              child: Image.asset(image, fit: BoxFit.fitWidth),
             ),
           ),
           Container(
@@ -49,7 +51,7 @@ class Product extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontSize: 16
