@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:plantshop/screens/dashboard.dart';
 import 'package:plantshop/screens/login.dart';
@@ -35,7 +37,21 @@ class _SplashScreen extends State<SplashScreen> {
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height,
-              child: Image.asset("assets/Images/splash.png", scale: 0.5, fit: BoxFit.fitHeight),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset("assets/Images/splash.png", scale: 0.5, fit: BoxFit.fitHeight),
+                  ClipRRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(
+                        color: Colors.grey.withOpacity(0.1),
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
             Center(
               child: Image.asset("assets/Logos/logo-white.png", scale: 3),
