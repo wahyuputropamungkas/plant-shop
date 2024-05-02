@@ -178,15 +178,18 @@ class _Home extends State<Home> {
                       }),
                     );
                   } else if(snapshot.hasError) {
-                    return Text(
+                    return const Text(
                       "Error"
                     );
                   } else {
-                    return Text(
+                    return const Text(
                         "Failed"
                     );
                   }
+                } else {
+                  return const CircularProgressIndicator();
                 }
+
                 return Container();
               },
             ),
