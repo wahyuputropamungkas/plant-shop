@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:plantshop/components/product.dart';
 import 'package:plantshop/constants/custom_colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:plantshop/screens/product_details.dart';
 
 class Home extends StatefulWidget {
 
@@ -164,13 +165,23 @@ class _Home extends State<Home> {
 
                         return Row(
                           children: [
-                            Product(
-                              image: currentData["image"],
-                              title: currentData["name"],
-                              description: currentData["description"],
-                              type: currentData["type"],
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ProductDetails()
+                                  )
+                                );
+                              },
+                              child: Product(
+                                image: currentData["image"],
+                                title: currentData["name"],
+                                description: currentData["description"],
+                                type: currentData["type"],
+                              ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             )
                           ],
