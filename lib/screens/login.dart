@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:plantshop/components/agreement.dart';
@@ -34,6 +35,27 @@ class _Login extends State<Login> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<bool> signIn() async {
+    bool response = false;
+
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: ctrlEmail.text,
+          password: ctrlPass.text
+      );
+
+      response = true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+
+    return response;
   }
 
   @override
@@ -117,21 +139,8 @@ class _Login extends State<Login> {
                     text: "Sign In",
                     onTap: () async {
                       if(ctrlEmail.text.isNotEmpty && ctrlPass.text.isNotEmpty) {
-                        var body = json.encode({
-                          "email": ctrlEmail.text,
-                          "password": ctrlPass.text
-                        });
-
-                        await http.post(
-                            Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products"),
-                            headers: {"Content-Type": "application/json"},
-                            body: body,
-                            encoding: Encoding.getByName("utf-8")
-                        ).then((value) {
-                          dynamic apiResponse = json.decode(value.body.toString());
-                          bool status = apiResponse["status"];
-
-                          if(status) {
+                        await signIn().then((value) {
+                          if(value == true) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -147,7 +156,47 @@ class _Login extends State<Login> {
                                 )
                             );
                           }
+                        }).onError((error, stackTrace) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Error. ${error.toString()}"
+                                ),
+                              )
+                          );
                         });
+
+                        // var body = json.encode({
+                        //   "email": ctrlEmail.text,
+                        //   "password": ctrlPass.text
+                        // });
+                        //
+                        // await http.post(
+                        //     Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products"),
+                        //     headers: {"Content-Type": "application/json"},
+                        //     body: body,
+                        //     encoding: Encoding.getByName("utf-8")
+                        // ).then((value) {
+                        //   dynamic apiResponse = json.decode(value.body.toString());
+                        //   bool status = apiResponse["status"];
+                        //
+                        //   if(status) {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (ctx) => const Dashboard()
+                        //         )
+                        //     );
+                        //   } else {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //         const SnackBar(
+                        //           content: Text(
+                        //               "Unable to login"
+                        //           ),
+                        //         )
+                        //     );
+                        //   }
+                        // });
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

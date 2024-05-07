@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plantshop/screens/dashboard.dart';
 import 'package:plantshop/screens/login.dart';
@@ -17,13 +18,26 @@ class _SplashScreen extends State<SplashScreen> {
     super.initState();
     
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(const Duration(seconds: 5)).then((value) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Login()
-          )
-        );
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null) {
+          Future.delayed(const Duration(seconds: 5)).then((value) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Login()
+                )
+            );
+          });
+        } else {
+          Future.delayed(const Duration(seconds: 5)).then((value) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Dashboard()
+                )
+            );
+          });
+        }
       });
     });
   }

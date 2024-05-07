@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "658671041011",
+    "firebase_url": "https://plant-shop-e48a2-default-rtdb.firebaseio.com",
+    "project_id": "plant-shop-e48a2",
+    "storage_bucket": "plant-shop-e48a2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658671041011:android:88094bd9d21836530fba86",
+        "android_client_info": {
+          "package_name": "com.flutterworkshop.plantshop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaHqxoHrIDlWww9PI0H9TY4yFU7a2jGns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658671041011:android:3d37aa63bc52e7cb0fba86",
+        "android_client_info": {
+          "package_name": "com.oemahsolution.osfarmsystem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaHqxoHrIDlWww9PI0H9TY4yFU7a2jGns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
