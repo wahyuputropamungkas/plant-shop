@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -67,4 +64,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'plant-shop-e48a2.appspot.com',
     iosBundleId: 'com.flutterworkshop.plantshop',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAEu7fF-L-k8ax7hyzV2uX4phIlibMmwHE',
+    appId: '1:658671041011:web:436bab92aecd81a50fba86',
+    messagingSenderId: '658671041011',
+    projectId: 'plant-shop-e48a2',
+    authDomain: 'plant-shop-e48a2.firebaseapp.com',
+    databaseURL: 'https://plant-shop-e48a2-default-rtdb.firebaseio.com',
+    storageBucket: 'plant-shop-e48a2.appspot.com',
+    measurementId: 'G-96HHKDXWDC',
+  );
+
 }
