@@ -60,28 +60,28 @@ class _Home extends State<Dashboard> {
                     Visibility(
                       visible: selectedBottomMenu == 0 ? true : false,
                       maintainState: true,
-                      maintainSize: true,
+                      maintainSize: false,
                       maintainAnimation: true,
                       child: const Home(),
                     ),
                     Visibility(
                       visible: selectedBottomMenu == 1 ? true : false,
                       maintainState: true,
-                      maintainSize: true,
+                      maintainSize: false,
                       maintainAnimation: true,
                       child: const Favorite(),
                     ),
                     Visibility(
                       visible: selectedBottomMenu == 2 ? true : false,
                       maintainState: true,
-                      maintainSize: true,
+                      maintainSize: false,
                       maintainAnimation: true,
                       child: const Cart(),
                     ),
                     Visibility(
                       visible: selectedBottomMenu == 3 ? true : false,
                       maintainState: true,
-                      maintainSize: true,
+                      maintainSize: false,
                       maintainAnimation: true,
                       child: const Profile(),
                     )
