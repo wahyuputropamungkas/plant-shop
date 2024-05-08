@@ -15,6 +15,8 @@ import 'package:plantshop/constants/custom_colors.dart';
 import 'package:plantshop/screens/dashboard.dart';
 import 'package:plantshop/screens/register.dart';
 import 'package:http/http.dart' as http;
+import 'package:plantshop/services/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
 
@@ -37,8 +39,14 @@ class _Login extends State<Login> {
     super.initState();
   }
 
-  Future<bool> signIn() async {
-    bool response = false;
+  Future<Map<String, dynamic>> signIn() async {
+    Map<String, dynamic> response = {
+      "status": false,
+      "user": {
+        "name": "",
+        "email": ""
+      }
+    };
 
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -46,7 +54,11 @@ class _Login extends State<Login> {
           password: ctrlPass.text
       );
 
-      response = true;
+      response["status"] = true;
+      response["user"] = {
+        "name": credential.user!.displayName,
+        "email": credential.user!.email
+      };
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -139,8 +151,11 @@ class _Login extends State<Login> {
                     text: "Sign In",
                     onTap: () async {
                       if(ctrlEmail.text.isNotEmpty && ctrlPass.text.isNotEmpty) {
-                        await signIn().then((value) {
-                          if(value == true) {
+                        await signIn().then((value) async {
+                          if(value["status"] == true) {
+                            SharedPreferences sh = await SharedPreferences.getInstance();
+                            await sh.setString("user", value["user"]);
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

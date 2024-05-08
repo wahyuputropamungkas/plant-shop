@@ -6,6 +6,7 @@ import 'package:plantshop/components/product.dart';
 import 'package:plantshop/constants/custom_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:plantshop/screens/product_details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
 
@@ -201,8 +202,6 @@ class _Home extends State<Home> {
                 } else {
                   return const CircularProgressIndicator();
                 }
-
-                return Container();
               },
             ),
           )
