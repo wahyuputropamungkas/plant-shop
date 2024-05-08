@@ -18,11 +18,12 @@ class AuthService {
       );
       final User? firebaseUser = userCredential.user;
       if (firebaseUser != null) {
-        return UserModel(
-          id: firebaseUser.uid,
-          email: firebaseUser.email ?? '',
-          displayName: firebaseUser.displayName ?? '',
-        );
+        UserModel userModel = UserModel();
+        userModel.id = firebaseUser.uid;
+        userModel.email = firebaseUser.email!;
+        userModel.displayName = firebaseUser.displayName!;
+
+        return userModel;
       }
     } on FirebaseAuthException catch (e) {
       print(e.toString());

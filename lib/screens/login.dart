@@ -12,6 +12,8 @@ import 'package:plantshop/components/forms/form_group.dart';
 import 'package:plantshop/components/forms/form_password.dart';
 import 'package:plantshop/components/forms/form_text.dart';
 import 'package:plantshop/constants/custom_colors.dart';
+import 'package:plantshop/models/login_response.dart';
+import 'package:plantshop/models/model_user.dart';
 import 'package:plantshop/screens/dashboard.dart';
 import 'package:plantshop/screens/register.dart';
 import 'package:http/http.dart' as http;
@@ -39,14 +41,9 @@ class _Login extends State<Login> {
     super.initState();
   }
 
-  Future<Map<String, dynamic>> signIn() async {
-    Map<String, dynamic> response = {
-      "status": false,
-      "user": {
-        "name": "",
-        "email": ""
-      }
-    };
+  Future<LoginResponse> signIn() async {
+    UserModel userModel = UserModel();
+    LoginResponse response = LoginResponse();
 
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -54,17 +51,30 @@ class _Login extends State<Login> {
           password: ctrlPass.text
       );
 
-      response["status"] = true;
-      response["user"] = {
-        "name": credential.user!.displayName,
-        "email": credential.user!.email
-      };
+      if(credential.user != null) {
+        if(credential.user?.displayName != null) {
+          userModel.displayName = credential.user!.displayName!;
+        }
+
+        if(credential.user?.email != null) {
+          userModel.email = credential.user!.email!;
+        }
+
+        if(credential.user?.uid != null) {
+          userModel.id = credential.user!.uid!;
+        }
+      }
+
+      response.status = true;
+      response.user = userModel;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        response.message = "No user found for that email.";
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        response.message = "Wrong password provided for that user.";
       }
+    } catch(err) {
+      response.message = err.toString();
     }
 
     return response;
@@ -152,21 +162,23 @@ class _Login extends State<Login> {
                     onTap: () async {
                       if(ctrlEmail.text.isNotEmpty && ctrlPass.text.isNotEmpty) {
                         await signIn().then((value) async {
-                          if(value["status"] == true) {
+                          if(value.status == true) {
                             SharedPreferences sh = await SharedPreferences.getInstance();
-                            await sh.setString("user", value["user"]);
+                            await sh.setString("user", json.encode(value.user));
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => const Dashboard()
-                                )
-                            );
+                            if(context.mounted) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => const Dashboard()
+                                  )
+                              );
+                            }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content: Text(
-                                      "Unable to login"
+                                      "Unable to login. ${value.message}"
                                   ),
                                 )
                             );
@@ -180,38 +192,6 @@ class _Login extends State<Login> {
                               )
                           );
                         });
-
-                        // var body = json.encode({
-                        //   "email": ctrlEmail.text,
-                        //   "password": ctrlPass.text
-                        // });
-                        //
-                        // await http.post(
-                        //     Uri.parse("https://private-40208d-flutterworkshop.apiary-mock.com/products"),
-                        //     headers: {"Content-Type": "application/json"},
-                        //     body: body,
-                        //     encoding: Encoding.getByName("utf-8")
-                        // ).then((value) {
-                        //   dynamic apiResponse = json.decode(value.body.toString());
-                        //   bool status = apiResponse["status"];
-                        //
-                        //   if(status) {
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (ctx) => const Dashboard()
-                        //         )
-                        //     );
-                        //   } else {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(
-                        //           content: Text(
-                        //               "Unable to login"
-                        //           ),
-                        //         )
-                        //     );
-                        //   }
-                        // });
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
