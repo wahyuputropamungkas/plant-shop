@@ -262,8 +262,6 @@ class _Favorite extends State<Favorite> {
                     String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
                         length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-                    final ttf = pw.Font.ttf(await rootBundle.load("assets/Fonts/Manrope/Manrope-Regular.ttf"));
-
                     final pdf = pw.Document();
 
                     pdf.addPage(
