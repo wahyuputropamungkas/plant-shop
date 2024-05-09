@@ -33,6 +33,7 @@ class _Login extends State<Login> {
 
   TextEditingController ctrlEmail = TextEditingController();
   TextEditingController ctrlPass = TextEditingController();
+  FocusNode fc = FocusNode();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

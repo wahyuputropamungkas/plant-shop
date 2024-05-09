@@ -40,6 +40,11 @@ dependencies:
   firebase_core: ^2.24.2
   cloud_firestore: ^4.14.0
   shared_preferences: ^2.2.2
+  pdf: ^3.10.8
+  material_dialogs: ^1.1.4
+  path_provider: ^2.1.2
+  permission_handler: ^11.0.1
+  device_info_plus: ^9.1.2
 
 dev_dependencies:
   flutter_test:

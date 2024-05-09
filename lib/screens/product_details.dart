@@ -4,7 +4,18 @@ import 'package:plantshop/constants/custom_colors.dart';
 
 class ProductDetails extends StatefulWidget {
 
-  const ProductDetails({super.key});
+  const ProductDetails({
+    super.key,
+    required this.title,
+    required this.image,
+    required this.description,
+    required this.type
+  });
+
+  final String title;
+  final String image;
+  final String description;
+  final String type;
 
   @override
   State<ProductDetails> createState() => _ProductDetails();
@@ -56,13 +67,12 @@ class _ProductDetails extends State<ProductDetails> {
         children: [
           Expanded(
             flex: 7,
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Image.asset("assets/Images/plant3.png", scale: 1, fit: BoxFit.fitWidth),
+                    Image.network(widget.image, scale: 1, fit: BoxFit.fitWidth),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
@@ -77,8 +87,8 @@ class _ProductDetails extends State<ProductDetails> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "Fiddle leaf fig plant",
+                                    Text(
+                                      widget.title,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
@@ -112,7 +122,7 @@ class _ProductDetails extends State<ProductDetails> {
                                       horizontal: 8
                                   ),
                                   child: Text(
-                                    "Indoor",
+                                    widget.type,
                                     style: TextStyle(
                                         color: CustomColors().green,
                                         fontSize: 14,
@@ -211,26 +221,33 @@ class _ProductDetails extends State<ProductDetails> {
                           const SizedBox(
                             height: 16,
                           ),
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                "Description",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 24
-                                ),
-                              ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                "Native to the Yunnan and Sichuan provinces of southern China, the Chinese money plant was first brought to the UK in 1906 by Scottish botanist George Forrest (yes, we know the exact man who found it). It became a popular houseplant later in the 20th century because it is simple to grow and really easy to propagate, meaning friends could pass cuttings around amongst themselves. That earned it the nickname ‘pass it on plant’.",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Description",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 24
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Text(
+                                      widget.description,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12
+                                      ),
+                                    )
+                                  ],
                                 ),
                               )
                             ],

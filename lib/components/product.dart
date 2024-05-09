@@ -34,13 +34,12 @@ class Product extends StatelessWidget {
         children: [
           SizedBox(
             width: 200,
-            height: 200,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25)
               ),
-              child: Image.asset(image, fit: BoxFit.fitWidth),
+              child: Image.network(image, fit: BoxFit.fitWidth, alignment: Alignment.topCenter),
             ),
           ),
           Container(
@@ -59,6 +58,8 @@ class Product extends StatelessWidget {
                 ),
                 Text(
                   description,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                   style: TextStyle(
                       color: CustomColors().grey757575,
                       fontWeight: FontWeight.w400,

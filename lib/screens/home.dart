@@ -19,6 +19,8 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
 
+  final Stream<QuerySnapshot> plants = FirebaseFirestore.instance.collection('plants').snapshots();
+
   int selectedBottomMenu = 0;
   List<Map<String, dynamic>> listDataBottomMenu = [];
   List<Map<String, String>> myProducts = [];
@@ -156,51 +158,64 @@ class _Home extends State<Home> {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: FutureBuilder(
-              future: getProducts(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if(snapshot.connectionState == ConnectionState.done) {
-                  if(snapshot.hasData) {
-                    return Row(
-                      children: List.generate(produk.length, (index) {
-                        Map<String, dynamic> currentData = produk[index];
+            child: StreamBuilder(
+              stream: plants,
+              builder: (context, snapshot) {
+                if(snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                        "Somethind went wrong. Error : ${snapshot.error.toString()}"
+                    ),
+                  );
+                }
 
-                        return Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
+                if(snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+
+                if(snapshot.hasData) {
+                  return Row(
+                    children: List.generate(snapshot.data!.docs.length, (index) {
+                      DocumentSnapshot currentData = snapshot.data!.docs[index];
+
+                      return Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const ProductDetails()
+                                      builder: (context) => ProductDetails(
+                                        title: currentData["name"],
+                                        image: currentData["image"],
+                                        type: currentData["type"],
+                                        description: currentData["description"],
+                                      )
                                   )
-                                );
-                              },
-                              child: Product(
-                                image: currentData["image"],
-                                title: currentData["name"],
-                                description: currentData["description"],
-                                type: currentData["type"],
-                              ),
+                              );
+                            },
+                            child: Product(
+                              image: currentData["image"],
+                              title: currentData["name"],
+                              description: currentData["description"],
+                              type: currentData["type"],
                             ),
-                            const SizedBox(
-                              width: 10,
-                            )
-                          ],
-                        );
-                      }),
-                    );
-                  } else if(snapshot.hasError) {
-                    return const Text(
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          )
+                        ],
+                      );
+                    }),
+                  );
+                } else if(snapshot.hasError) {
+                  return const Text(
                       "Error"
-                    );
-                  } else {
-                    return const Text(
-                        "Failed"
-                    );
-                  }
+                  );
                 } else {
-                  return const CircularProgressIndicator();
+                  return const Text(
+                      "Failed"
+                  );
                 }
               },
             ),
