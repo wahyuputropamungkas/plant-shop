@@ -171,51 +171,51 @@ class _Home extends State<Home> {
 
                 if(snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
-                }
-
-                if(snapshot.hasData) {
-                  return Row(
-                    children: List.generate(snapshot.data!.docs.length, (index) {
-                      DocumentSnapshot currentData = snapshot.data!.docs[index];
-
-                      return Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProductDetails(
-                                        title: currentData["name"],
-                                        image: currentData["image"],
-                                        type: currentData["type"],
-                                        description: currentData["description"],
-                                      )
-                                  )
-                              );
-                            },
-                            child: Product(
-                              image: currentData["image"],
-                              title: currentData["name"],
-                              description: currentData["description"],
-                              type: currentData["type"],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          )
-                        ],
-                      );
-                    }),
-                  );
-                } else if(snapshot.hasError) {
-                  return const Text(
-                      "Error"
-                  );
                 } else {
-                  return const Text(
-                      "Failed"
-                  );
+                  if(snapshot.hasData) {
+                    return Row(
+                      children: List.generate(snapshot.data!.docs.length, (index) {
+                        DocumentSnapshot currentData = snapshot.data!.docs[index];
+
+                        return Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductDetails(
+                                          title: currentData["name"],
+                                          image: currentData["image"],
+                                          type: currentData["type"],
+                                          description: currentData["description"],
+                                        )
+                                    )
+                                );
+                              },
+                              child: Product(
+                                image: currentData["image"],
+                                title: currentData["name"],
+                                description: currentData["description"],
+                                type: currentData["type"],
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            )
+                          ],
+                        );
+                      }),
+                    );
+                  } else if(snapshot.hasError) {
+                    return const Text(
+                        "Error"
+                    );
+                  } else {
+                    return const Text(
+                        "Failed"
+                    );
+                  }
                 }
               },
             ),

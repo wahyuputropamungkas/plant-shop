@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:plantshop/components/buttons/button_green.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'dart:html' as html;
 
 class Favorite extends StatefulWidget {
 
@@ -201,7 +204,6 @@ class _Favorite extends State<Favorite> {
         const SizedBox(
           height: 30,
         ),
-        pdfFileWidget,
         const SizedBox(
           height: 30,
         ),
@@ -236,7 +238,7 @@ class _Favorite extends State<Favorite> {
                             ),
                             children: [
                               TextSpan(
-                                  text: "${index + 1}. Filename: "
+                                  text: "${index + 1}. Plant name: "
                               ),
                               TextSpan(
                                   text: data["name"],
@@ -250,6 +252,10 @@ class _Favorite extends State<Favorite> {
                     );
                   }),
                 ),
+                const SizedBox(
+                  height: 30,
+                ),
+                pdfFileWidget,
                 const SizedBox(
                   height: 30,
                 ),
@@ -270,68 +276,77 @@ class _Favorite extends State<Favorite> {
                             build: (pw.Context context) {
                               return pw.Center(
                                   child: pw.Column(
-                                    children: List.generate(snapshot.data!.docs.length, (index) {
-                                      DocumentSnapshot data = snapshot.data!.docs[index];
+                                      children: List.generate(snapshot.data!.docs.length, (index) {
+                                        DocumentSnapshot data = snapshot.data!.docs[index];
 
-                                      return pw.Align(
-                                        alignment: pw.Alignment.centerLeft,
-                                        child: pw.RichText(
-                                          text: pw.TextSpan(
-                                              style: pw.TextStyle(
-                                                color: PdfColor.fromInt(0xFF000000),
-                                                fontSize: 14,
-                                              ),
-                                              children: [
-                                                pw.TextSpan(
-                                                    text: "${index + 1}. Filename: "
+                                        return pw.Align(
+                                          alignment: pw.Alignment.centerLeft,
+                                          child: pw.RichText(
+                                            text: pw.TextSpan(
+                                                style: pw.TextStyle(
+                                                  color: PdfColor.fromInt(0xFF000000),
+                                                  fontSize: 14,
                                                 ),
-                                                pw.TextSpan(
-                                                    text: data["name"],
-                                                    style: pw.TextStyle(
-                                                        fontWeight: pw.FontWeight.bold
-                                                    )
-                                                )
-                                              ]
+                                                children: [
+                                                  pw.TextSpan(
+                                                      text: "${index + 1}. Plant name: "
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text: data["name"],
+                                                      style: pw.TextStyle(
+                                                          fontWeight: pw.FontWeight.bold
+                                                      )
+                                                  )
+                                                ]
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    })
+                                        );
+                                      })
                                   )
                               );
                             }
                         )
                     );
 
-                    Directory? output = (await getExternalStorageDirectories(type: StorageDirectory.downloads))?.first;
+                    if(kIsWeb) {
+                      var savedFile = await pdf.save();
+                      List<int> fileInts = List.from(savedFile);
+                      html.AnchorElement(
+                          href: "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(fileInts)}")
+                        ..setAttribute("download", "example_${getRandomString(5)}.pdf")
+                        ..click();
+                    } else {
+                      Directory? output = (await getExternalStorageDirectories(type: StorageDirectory.downloads))?.first;
 
-                    final file = File("${output!.path}/example_${getRandomString(5)}.pdf");
+                      final file = File("${output!.path}/example_${getRandomString(5)}.pdf");
 
-                    await file.writeAsBytes(await pdf.save()).then((value) {
-                      setState(() {
-                        pdfFileWidget = RichText(
-                          text: TextSpan(
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14
-                              ),
-                              children: [
-                                TextSpan(
-                                    text: "Filename : "
+                      await file.writeAsBytes(await pdf.save()).then((value) {
+                        setState(() {
+                          pdfFileWidget = RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14
                                 ),
-                                TextSpan(
-                                    text: value.path,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700
-                                    )
-                                )
-                              ]
-                          ),
-                        );
+                                children: [
+                                  TextSpan(
+                                      text: "Plant name : "
+                                  ),
+                                  TextSpan(
+                                      text: value.path,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700
+                                      )
+                                  )
+                                ]
+                            ),
+                          );
+                        });
+                      }).onError((error, stackTrace) {
+                        print(error);
+                        print(stackTrace);
                       });
-                    }).onError((error, stackTrace) {
-                      print(error);
-                      print(stackTrace);
-                    });
+                    }
                   },
                 )
               ],
